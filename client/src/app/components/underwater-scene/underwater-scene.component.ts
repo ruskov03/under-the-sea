@@ -24,34 +24,93 @@ export class UnderwaterSceneComponent implements OnInit {
         this.render();
     }
 
+    private fishModels: THREE.Group[] = [];
+    private trashModels: THREE.Group[] = [];
+    private fishDirections: number[] = []; // Direction de chaque poisson (+1 = droite, -1 = gauche)
+
     private loadModels() {
-        const loader = new GLTFLoader();
-
-        // charger un poisson
-        loader.load('../../../assets/fish1.glb', (gltf) => {
+      const loader = new GLTFLoader();
+      const fishPaths = [
+          '../../../assets/fish1.glb',
+          '../../../assets/Fish.glb',
+          '../../../assets/JohnDory.glb',
+          '../../../assets/Fish (1).glb'
+      ];
+      const trashPaths = [
+          '../../../assets/Trash Bags.glb' // Liste des modèles de déchets
+      ];
+  
+      for (let i = 0; i < 30; i++) { // Ajouter 30 poissons
+        const randomFish = fishPaths[Math.floor(Math.random() * fishPaths.length)];
+    
+        loader.load(randomFish, (gltf) => {
             const fish = gltf.scene;
-            fish.position.set((Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10);
-            fish.scale.set(0.1,0.1,0.1);
+    
+            // Taille aléatoire pour les poissons
+            const scaleFactor = Math.random() * 0.3 + 0.1;
+            fish.scale.set(scaleFactor, scaleFactor, scaleFactor);
+    
+            // Positionner les poissons
+            fish.position.set(
+                Math.random() * window.innerWidth * 0.02 - 10, // Étaler sur toute la largeur
+                (Math.random() - 0.5) * 10,
+                (Math.random() - 0.5) * 15
+            );
+    
             this.scene.add(fish);
-        })
-        
-        loader.load('../../../assets/fish.glb', (gltf) => {
-            const fish = gltf.scene;
-            fish.position.set((Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10);
-            fish.scale.set(0.5,0.5,0.5);
-            this.scene.add(fish);
-        })
-
-        loader.load('../../../assets/JohnDory.glb', (gltf) => {
-            const fish = gltf.scene;
-            fish.position.set((Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10);
-            fish.scale.set(0.5,0.5,0.5);
-            this.scene.add(fish);
-        })
-
-        this.render();
+            this.fishModels.push(fish);
+            this.fishDirections.push(Math.random() < 0.5 ? 1 : -1); // Direction aléatoire droite ou gauche
+        });
     }
+    
+  
+      // Charger les déchets SANS ANIMATION
+      trashPaths.forEach((trashPath) => {
+          loader.load(trashPath, (gltf) => {
+              const trash = gltf.scene;
+  
+              // Taille aléatoire pour les poubelles
+              const scaleFactor = Math.random() * 0.5 + 0.2;
+              trash.scale.set(scaleFactor, scaleFactor, scaleFactor);
+  
+              // Positionner les poubelles
+              trash.position.set(
+                  (Math.random() - 0.5) * 15,
+                  (Math.random() - 0.5) * 5,
+                  (Math.random() - 0.5) * 10
+              );
+  
+              this.scene.add(trash);
+              this.trashModels.push(trash); // Ajouter dans `trashModels` pour ne PAS les animer
+          });
+      });
+  
+      this.render();
+  }
+  
 
+  private animateFish() {
+    this.fishModels.forEach((fish, index) => {
+        const speed = 0.005 + Math.random() * 0.002; // Vitesse légèrement variable
+
+        // Déplacement strictement horizontal
+        fish.position.x += speed * this.fishDirections[index];
+
+        // Changer de direction lorsqu'ils atteignent les bords de l'écran
+        if (fish.position.x > 10) {
+            this.fishDirections[index] = -1; // Va vers la gauche
+            fish.rotation.y = Math.PI; // Tourne pour aller vers la gauche
+        } else if (fish.position.x < -10) {
+            this.fishDirections[index] = 1; // Va vers la droite
+            fish.rotation.y = 0; // Tourne pour aller vers la droite
+        }
+    });
+}
+
+
+
+
+  
     private initScene() {
         const container = this.canvasContainer.nativeElement;
 
@@ -117,7 +176,9 @@ export class UnderwaterSceneComponent implements OnInit {
     }
 
     private render = () => {
+        this.animateFish();
         this.renderer.render(this.scene, this.camera);
+        requestAnimationFrame(this.render);
     };
 
     private onMouseDown(event: MouseEvent) {
@@ -153,4 +214,5 @@ export class UnderwaterSceneComponent implements OnInit {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.render(); // 👈 Mettre à jour l'affichage après resize
     }
+    
 }
