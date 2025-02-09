@@ -1,44 +1,76 @@
-.container {
-    min-height: 100vh;
-    height: auto;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.justified {
+body,
+html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+    background-color: black;
+}
+
+.canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+}
+
+nav {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    background: rgba(0, 0, 0, 0.6); /* Slight transparency for a sleek effect */
+    padding: 12px 24px;
+    border-radius: 12px;
+    z-index: 10000;
 }
 
-.button {
-    margin-top: 10px;
-    text-align: center;
+nav ul {
+    display: flex;
+    gap: 3rem;
+    color: white;
+    list-style: none;
 }
 
-.team-name {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
-    color: green;
+nav li {
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: white;
+    transition: transform 0.1s ease-in-out;
+    cursor: pointer;
 }
 
-.header-item {
-    justify-content: center;
-    text-align: center;
+nav li:hover {
+    color: #40a4df; /* Blue hover effect */
+    transform: scale(1.1);
 }
 
-.footer-item {
-    text-align: center;
+nav a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
 }
 
-.footer-item p :nth-child(even) {
-    color: orange;
-}
-.footer-item p :nth-child(odd) {
-    color: blue;
-}
-
-.server-message {
-    justify-content: center;
-    width: 20%;
-    min-width: min-content;
+.title {
+    color: white;
+    z-index: 2;
+    position: absolute;
+    font-size: 3rem;
+    left: 50%;
+    top: 95%;
+    transform: translate(-50%, -75%);
 }
