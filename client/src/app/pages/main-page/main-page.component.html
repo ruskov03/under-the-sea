@@ -2,29 +2,22 @@
 <!-- saved from url=(0054)https://chrisboligprojects.pythonanywhere.com/gpuEarth -->
 <html lang="en">
     <head>
+        <link rel="stylesheet" href="main-page.component.scss" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <title>points Earth</title>
-        <style>
-            body {
-                margin: 0;
-                background-color: black;
-            }
-        </style>
-        <script type="importmap">
-            {
-                "imports": {
-                    "three": "https://cdn.jsdelivr.net/npm/three@0.161/build/three.module.js",
-                    "jsm/": "https://cdn.jsdelivr.net/npm/three@0.161/examples/jsm/"
-                }
-            }
-        </script>
     </head>
     <body>
         <script type="module" src="main-page.component.ts"></script>
+        <nav>
+            <ul>
+                <li>Explore</li>
+                <li>Create</li>
+            </ul>
+        </nav>
+        <h1 class="title">Give it a spin!</h1>
         <div #canvasContainer class="canvas-container"></div>
-        <img #gifElement id="gif1" src="assets/water.gif" style="display: none;" />
+        <img #gifElement id="gif1" src="assets/water.gif" style="display: none" />
     </body>
 </html>
